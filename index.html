@@ -403,6 +403,103 @@ code{
   text-align:center;font-size:.8rem;color:var(--muted);
   padding:20px 0 6px;
 }
+
+/* ============================================================
+   17. HIGHLIGHT MODE – CHẾ ĐỘ ĐÁNH DẤU (GIẢNG BÀI)
+   ============================================================ */
+.hl-fab{
+  position:fixed;bottom:20px;right:20px;
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue-500),var(--blue-700));
+  color:#fff;border:none;font-size:1.5rem;line-height:1;
+  cursor:pointer;box-shadow:0 4px 16px rgba(22,35,61,.28);
+  z-index:110;display:flex;align-items:center;justify-content:center;
+  transition:transform .15s, background .2s;
+}
+.hl-fab:hover{transform:scale(1.08);}
+.hl-fab.active{
+  background:linear-gradient(135deg,#2fb56b,#1f8a54);
+  box-shadow:0 4px 20px rgba(31,138,84,.4);
+}
+
+.hl-toolbar{
+  position:fixed;bottom:88px;right:20px;
+  background:#fff;border-radius:14px;
+  box-shadow:0 6px 28px rgba(22,35,61,.22);
+  padding:10px 12px;display:flex;gap:6px;align-items:center;
+  z-index:110;flex-wrap:wrap;max-width:calc(100vw - 40px);
+}
+.hl-toolbar[hidden]{display:none !important;}
+.hl-label{
+  font-size:.82rem;font-weight:700;color:var(--blue-700);
+  margin-right:4px;
+}
+
+.hl-color{
+  width:30px;height:30px;border-radius:50%;
+  border:2px solid rgba(22,35,61,.15);
+  cursor:pointer;padding:0;
+  transition:transform .12s, border-color .12s;
+}
+.hl-color:hover{transform:scale(1.1);}
+.hl-color.active{
+  border-color:var(--navy);
+  box-shadow:0 0 0 2px #fff, 0 0 0 4px var(--blue-500);
+  transform:scale(1.08);
+}
+
+.hl-toolbar .hl-action{
+  font-family:inherit;font-size:.82rem;font-weight:600;
+  padding:6px 11px;border-radius:8px;
+  border:1px solid var(--blue-200);background:#fff;color:var(--blue-700);
+  cursor:pointer;min-height:32px;line-height:1;
+}
+.hl-toolbar .hl-action:hover{background:var(--blue-50);}
+.hl-toolbar .hl-action.active{
+  background:var(--red-bg);border-color:var(--red-bd);color:var(--red);
+}
+.hl-toolbar .hl-action.close{
+  color:var(--muted);padding:6px 9px;
+}
+
+/* Marks */
+mark.hl{
+  padding:2px 3px;border-radius:4px;color:inherit;
+  transition:background .15s;
+  box-decoration-break:clone;
+  -webkit-box-decoration-break:clone;
+}
+mark.hl-yellow{background:#fff3b0;}
+mark.hl-green{background:#b8e6c8;}
+mark.hl-pink{background:#ffc4d6;}
+mark.hl-blue{background:#b8d9f5;}
+
+/* Erase mode: highlight marks clickable */
+body.hl-erase-mode mark.hl{
+  cursor:pointer;
+  outline:2px dashed var(--red);
+  outline-offset:-1px;
+}
+body.hl-erase-mode mark.hl:hover{
+  background:var(--red-bg) !important;
+}
+
+/* Small hint text when highlight mode is active */
+.hl-active-indicator{
+  position:fixed;top:14px;right:88px;
+  background:var(--green);color:#fff;
+  font-size:.72rem;font-weight:700;
+  padding:3px 9px;border-radius:99px;
+  z-index:105;letter-spacing:.03em;
+  box-shadow:0 2px 8px rgba(31,138,84,.3);
+}
+.hl-active-indicator[hidden]{display:none !important;}
+
+@media (max-width:520px){
+  .hl-fab{width:48px;height:48px;bottom:14px;right:14px;font-size:1.3rem;}
+  .hl-toolbar{bottom:74px;right:14px;left:14px;max-width:none;justify-content:center;}
+  .hl-active-indicator{top:56px;right:14px;}
+}
 </style>
 </head>
 <body>
@@ -452,6 +549,7 @@ code{
           <span class="chip">Trình độ A2–B1</span>
           <span class="chip">9 phần</span>
           <span class="chip">Tiến độ được lưu tự động</span>
+          <span class="chip">🖍 Chế độ đánh dấu</span>
         </div>
       </div>
 
@@ -670,21 +768,17 @@ code{
         <!-- Hình minh họa trục thời gian bằng SVG -->
         <div class="figure">
           <svg viewBox="0 0 660 200" role="img" aria-label="So sánh will be -ing và might be -ing trên trục thời gian">
-            <!-- Mốc 8:30 -->
             <line x1="340" y1="18" x2="340" y2="150" stroke="#e8a0a0" stroke-width="2" stroke-dasharray="5 5"/>
             <text x="346" y="16" font-size="12.5" fill="#c0392b" font-weight="700">8:30 – đừng gọi điện!</text>
 
-            <!-- Thanh 1: will be -ing -->
             <text x="247" y="40" font-size="12" fill="#2f74c0" font-weight="700">chắc chắn / đã dự định</text>
             <rect x="247" y="46" width="186" height="30" rx="8" fill="#4a90d9"/>
             <text x="340" y="66" text-anchor="middle" fill="#ffffff" font-size="12.5" font-weight="600">I’ll be watching TV</text>
 
-            <!-- Thanh 2: might be -ing -->
             <text x="247" y="98" font-size="12" fill="#5b6b86" font-weight="700">có thể (không chắc)</text>
             <rect x="247" y="104" width="186" height="30" rx="8" fill="#dceafc" stroke="#4a90d9" stroke-width="2" stroke-dasharray="6 4"/>
             <text x="340" y="124" text-anchor="middle" fill="#16233d" font-size="12.5" font-weight="600">I might be watching TV</text>
 
-            <!-- Trục thời gian -->
             <line x1="60" y1="150" x2="620" y2="150" stroke="#c3dcf9" stroke-width="3" stroke-linecap="round"/>
             <g fill="#5b6b86" font-size="12.5" text-anchor="middle">
               <text x="60" y="174">7:00</text>
@@ -976,6 +1070,21 @@ code{
       Unit 30 – May and Might 2 · Interactive E-Lesson · Hoạt động hoàn toàn ngoại tuyến
     </div>
   </div>
+</div>
+
+<!-- ================= HIGHLIGHT MODE UI ================= -->
+<button id="hlFAB" class="hl-fab" type="button" title="Bật/tắt chế độ đánh dấu (giảng bài)" aria-label="Chế độ đánh dấu">✏️</button>
+<span id="hlIndicator" class="hl-active-indicator" hidden>● Đang bật đánh dấu</span>
+
+<div id="hlToolbar" class="hl-toolbar" hidden role="toolbar" aria-label="Công cụ đánh dấu">
+  <span class="hl-label">Đánh dấu:</span>
+  <button class="hl-color active" data-color="yellow" type="button" style="background:#fff3b0" title="Vàng" aria-label="Vàng"></button>
+  <button class="hl-color" data-color="green" type="button" style="background:#b8e6c8" title="Xanh lá" aria-label="Xanh lá"></button>
+  <button class="hl-color" data-color="pink" type="button" style="background:#ffc4d6" title="Hồng" aria-label="Hồng"></button>
+  <button class="hl-color" data-color="blue" type="button" style="background:#b8d9f5" title="Xanh dương" aria-label="Xanh dương"></button>
+  <button id="hlErase" class="hl-action" type="button" title="Bật chế độ xoá đánh dấu">🗑 Xoá</button>
+  <button id="hlClear" class="hl-action" type="button" title="Xoá tất cả đánh dấu">Xoá hết</button>
+  <button id="hlClose" class="hl-action close" type="button" title="Thoát chế độ đánh dấu">✕</button>
 </div>
 
 <script>
@@ -1541,7 +1650,6 @@ var EXERCISES = {
    PHẦN 2: BỘ CÂU HỎI BÀI KIỂM TRA CUỐI (20 câu)
    ============================================================ */
 var FINAL_POOL = [
-  /* --- 6 câu trắc nghiệm --- */
   { id:'ft1', type:'mc', area:'A',
     stem:'I haven’t decided where to go for my holidays. I ___ to Ireland.',
     options:['might go','might to go','might going'], correct:0,
@@ -1572,7 +1680,6 @@ var FINAL_POOL = [
     options:['She might goes home.','She might to go home.','She might go home.'], correct:2,
     explain:'Sau <b>might</b> là động từ nguyên mẫu không “to”: <i>She might go home.</i>' },
 
-  /* --- 5 câu điền khuyết --- */
   { id:'ft7', type:'text', area:'A',
     stem:'Take an umbrella with you. It ______ later. <span class="hintline">(rain)</span>',
     answers:['might rain','may rain'],
@@ -1598,7 +1705,6 @@ var FINAL_POOL = [
     answers:['might as well get','may as well get'],
     explain:'<b>You might as well get a taxi.</b> — đi taxi cũng hợp lý như đi xe buýt.' },
 
-  /* --- 4 câu sửa lỗi --- */
   { id:'ft12', type:'text', area:'A',
     stem:'Correct the mistake: “She might goes home.”',
     answers:['she might go home'],
@@ -1619,7 +1725,6 @@ var FINAL_POOL = [
     answers:['we might as well walk','we may as well walk'],
     explain:'Bỏ “to”: <b>We might as well walk.</b>' },
 
-  /* --- 5 câu viết câu --- */
   { id:'ft16', type:'text', area:'A',
     stem:'Viết lại với “might not”: “Lisa’s not feeling very well. I’m not sure that she will go to the party.”<br>→ Lisa ______',
     answers:['might not come to the party','might not go to the party'],
@@ -1692,7 +1797,7 @@ var state = {
 
 function saveState(){
   try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
-  catch(e){ /* localStorage không khả dụng — bỏ qua */ }
+  catch(e){ }
 }
 
 function loadState(){
@@ -1705,7 +1810,7 @@ function loadState(){
     state.answers   = parsed.answers   || {};
     state.finalTest = parsed.finalTest || null;
     state.current   = parsed.current   || 'intro';
-  } catch(e){ /* dữ liệu hỏng — dùng mặc định */ }
+  } catch(e){ }
 }
 
 /* ============================================================
@@ -1942,7 +2047,6 @@ function renderExercise(key){
   updateExerciseScore(key);
 }
 
-/* ---------- ĐÃ SỬA: restoreExercise disable controls khi trạng thái sai ---------- */
 function restoreExercise(key){
   var list = EXERCISES[key];
   if(!list) return;
@@ -1952,7 +2056,6 @@ function restoreExercise(key){
     var saved = state.answers[q.id];
     if(!saved) return;
 
-    /* Khôi phục giá trị đã lưu */
     if(q.type === 'mc'){
       var b = card.querySelector('.opt[data-oi="' + saved.value + '"]');
       if(b) b.classList.add('selected');
@@ -1967,7 +2070,6 @@ function restoreExercise(key){
     if(saved.status === 'correct'){
       applyCorrect(card, q);
     } else {
-      /* Trạng thái sai/partial: disable control + hiện đáp án đúng */
       card.classList.add('wrong');
 
       if(q.type === 'mc'){
@@ -2100,7 +2202,6 @@ function checkQuestion(card){
   updateProgress();
 }
 
-/* ---------- ĐÃ SỬA: không ghi đè feedback đúng/sai ---------- */
 function showHint(card){
   if(card.classList.contains('correct') || card.classList.contains('wrong')) return;
   var q = findQuestion(card.dataset.qid);
@@ -2200,7 +2301,6 @@ function isSectionComplete(id){
   return qs.every(function(q){ return !!state.answers[q.id]; });
 }
 
-/* ---------- ĐÃ SỬA: chỉ render final test khi box còn rỗng ---------- */
 function goTo(id){
   if(!document.getElementById('sec-' + id)) return;
 
@@ -2453,7 +2553,6 @@ function submitTest(){
   updateProgress();
 }
 
-/* ---------- ĐÃ SỬA: xử lý đúng type 'select' ---------- */
 function renderTestResults(box){
   var r = testState.result;
   var total = testState.questions.length;
@@ -2516,15 +2615,10 @@ function renderTestResults(box){
     qtxt.appendChild(qstem);
     item.appendChild(qtxt);
 
-    /* Câu trả lời của học viên — hỗ trợ mc + select + text */
     var yourAns = document.createElement('div');
     yourAns.className = 'ra';
     var yourTxt = '';
-    if(d.q.type === 'mc'){
-      yourTxt = (d.value === '' || d.value === null || typeof d.value === 'undefined')
-        ? '(không trả lời)'
-        : d.q.options[d.value];
-    } else if(d.q.type === 'select'){
+    if(d.q.type === 'mc' || d.q.type === 'select'){
       yourTxt = (d.value === '' || d.value === null || typeof d.value === 'undefined')
         ? '(không trả lời)'
         : d.q.options[d.value];
@@ -2535,7 +2629,6 @@ function renderTestResults(box){
       (d.ok ? ' <span style="color:#1f8a54;font-weight:700">✓</span>' : ' <span style="color:#c0392b;font-weight:700">✗</span>');
     item.appendChild(yourAns);
 
-    /* Đáp án đúng */
     if(!d.ok){
       var rightAns = document.createElement('div');
       rightAns.className = 'ra';
@@ -2661,12 +2754,374 @@ function init(){
   goTo(startId);
 
   updateProgress();
+
+  /* Khôi phục highlight + khởi tạo công cụ đánh dấu */
+  initHighlightMode();
 }
 
 if(document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', init);
 } else {
   init();
+}
+
+/* ============================================================
+   PHẦN 11: CHẾ ĐỘ ĐÁNH DẤU (HIGHLIGHT MODE)
+   ============================================================ */
+
+var HL_KEY = 'unit30_highlights_v1';
+var hlState = {
+  active: false,
+  color: 'yellow',
+  erase: false,
+  highlights: []   /* { section, text, occurrence, color } */
+};
+
+function loadHighlights(){
+  try {
+    var raw = localStorage.getItem(HL_KEY);
+    if(!raw) return;
+    var parsed = JSON.parse(raw);
+    if(parsed && Array.isArray(parsed.highlights)){
+      hlState.highlights = parsed.highlights.filter(function(h){
+        return h && h.section && h.text && typeof h.occurrence === 'number';
+      });
+    }
+  } catch(e){ }
+}
+
+function saveHighlights(){
+  try {
+    localStorage.setItem(HL_KEY, JSON.stringify({ highlights: hlState.highlights }));
+  } catch(e){ }
+}
+
+/* Đếm và lấy vị trí của mark trong section */
+function getMarkOffset(section, mark){
+  var walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT, null, false);
+  var pos = 0;
+  var n;
+  while ((n = walker.nextNode())) {
+    if (n.parentElement && n.parentElement.closest('mark.hl') === mark) {
+      return pos;
+    }
+    pos += n.textContent.length;
+  }
+  return -1;
+}
+
+/* Vị trí của (node, offset) trong plain text của section */
+function getTextOffset(root, node, offset){
+  var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+  var pos = 0;
+  var n;
+  while ((n = walker.nextNode())) {
+    if (n === node) return pos + offset;
+    pos += n.textContent.length;
+  }
+  return -1;
+}
+
+/* Plain text của section (bỏ qua mark, lấy text bên trong) */
+function getPlainText(root){
+  var clone = root.cloneNode(true);
+  var marks = clone.querySelectorAll('mark.hl');
+  for (var i = 0; i < marks.length; i++) {
+    var m = marks[i];
+    m.parentNode.replaceChild(document.createTextNode(m.textContent), m);
+  }
+  return clone.textContent;
+}
+
+/* Bọc đoạn text [startOffset, endOffset] bằng <mark> */
+function wrapRange(root, startOffset, endOffset, color){
+  var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+  var pos = 0;
+  var targets = [];
+  var n;
+  while ((n = walker.nextNode())) {
+    if (n.parentElement && n.parentElement.closest('mark.hl')) {
+      pos += n.textContent.length;
+      continue;
+    }
+    var len = n.textContent.length;
+    var ns = pos, ne = pos + len;
+    if (ne > startOffset && ns < endOffset) {
+      targets.push({
+        node: n,
+        start: Math.max(0, startOffset - ns),
+        end: Math.min(len, endOffset - ns)
+      });
+    }
+    pos = ne;
+  }
+
+  /* Xử lý ngược để offset không bị lệch */
+  for (var i = targets.length - 1; i >= 0; i--) {
+    var t = targets[i];
+    var node = t.node;
+    var text = node.textContent;
+    var before = text.slice(0, t.start);
+    var middle = text.slice(t.start, t.end);
+    var after = text.slice(t.end);
+    if (!middle) continue;
+
+    var mark = document.createElement('mark');
+    mark.className = 'hl hl-' + color;
+    mark.textContent = middle;
+
+    var parent = node.parentNode;
+    if (after) parent.insertBefore(document.createTextNode(after), node.nextSibling);
+    parent.insertBefore(mark, node.nextSibling);
+    if (before) node.textContent = before;
+    else parent.removeChild(node);
+  }
+}
+
+/* Quét lại toàn bộ marks để đồng bộ hlState.highlights (dùng sau khi xoá) */
+function rescanHighlights(){
+  hlState.highlights = [];
+  var sections = document.querySelectorAll('.lesson-section');
+  for (var s = 0; s < sections.length; s++) {
+    var section = sections[s];
+    var secId = section.id.replace('sec-', '');
+    var marks = section.querySelectorAll('mark.hl');
+    if (!marks.length) continue;
+
+    var plainText = getPlainText(section);
+
+    for (var m = 0; m < marks.length; m++) {
+      var mark = marks[m];
+      var text = mark.textContent;
+      if (!text) continue;
+      var color = (mark.className.match(/hl-(\w+)/) || [])[1] || 'yellow';
+      var markStart = getMarkOffset(section, mark);
+      if (markStart === -1) continue;
+
+      var before = plainText.slice(0, markStart);
+      var occurrence = 0;
+      var idx = -1;
+      while ((idx = before.indexOf(text, idx + 1)) !== -1) occurrence++;
+
+      hlState.highlights.push({
+        section: secId,
+        text: text,
+        occurrence: occurrence,
+        color: color
+      });
+    }
+  }
+  saveHighlights();
+}
+
+/* Khôi phục tất cả highlight từ localStorage */
+function restoreHighlights(){
+  var sections = document.querySelectorAll('.lesson-section');
+  var map = {};
+  for (var i = 0; i < sections.length; i++) {
+    map[sections[i].id.replace('sec-', '')] = sections[i];
+  }
+
+  hlState.highlights.forEach(function(h){
+    var section = map[h.section];
+    if (!section) return;
+
+    var plainText = getPlainText(section);
+    var idx = -1;
+    for (var k = 0; k <= h.occurrence; k++) {
+      idx = plainText.indexOf(h.text, idx + 1);
+      if (idx === -1) return;
+    }
+    if (idx === -1) return;
+
+    wrapRange(section, idx, idx + h.text.length, h.color);
+  });
+}
+
+/* Bật/tắt chế độ highlight */
+function toggleHighlightMode(){
+  hlState.active = !hlState.active;
+
+  var fab = document.getElementById('hlFAB');
+  var toolbar = document.getElementById('hlToolbar');
+  var indicator = document.getElementById('hlIndicator');
+
+  fab.classList.toggle('active', hlState.active);
+  toolbar.hidden = !hlState.active;
+  indicator.hidden = !hlState.active;
+  fab.textContent = hlState.active ? '🖍' : '✏️';
+
+  if (!hlState.active) {
+    hlState.erase = false;
+    document.body.classList.remove('hl-erase-mode');
+    document.getElementById('hlErase').classList.remove('active');
+  }
+}
+
+/* Xử lý khi user chọn text */
+function handleSelection(){
+  if (!hlState.active || hlState.erase) return;
+
+  setTimeout(function(){
+    var sel = window.getSelection();
+    if (!sel || sel.isCollapsed || sel.rangeCount === 0) return;
+
+    var text = sel.toString().trim();
+    if (!text) return;
+
+    var range = sel.getRangeAt(0);
+    var startNode = range.startContainer;
+    var endNode = range.endContainer;
+    var startEl = startNode.nodeType === 3 ? startNode.parentElement : startNode;
+    var endEl = endNode.nodeType === 3 ? endNode.parentElement : endNode;
+
+    /* Bỏ qua nếu nằm trong phần tử không cho highlight */
+    var skipSel = 'input, select, textarea, button, mark.hl, svg';
+    if (startEl.closest(skipSel) || endEl.closest(skipSel)) return;
+
+    /* Phải cùng một section đang active */
+    var secStart = startEl.closest('.lesson-section');
+    var secEnd = endEl.closest('.lesson-section');
+    if (!secStart || secStart !== secEnd) return;
+    if (!secStart.classList.contains('active')) return;
+
+    var section = secStart;
+    var plainText = getPlainText(section);
+
+    var startOffset = getTextOffset(section, startNode, range.startOffset);
+    var endOffset = getTextOffset(section, endNode, range.endOffset);
+    if (startOffset === -1 || endOffset === -1 || endOffset <= startOffset) return;
+
+    /* Cắt khoảng trắng đầu/cuối */
+    var s = startOffset, e = endOffset;
+    while (s < e && /\s/.test(plainText[s])) s++;
+    while (e > s && /\s/.test(plainText[e - 1])) e--;
+    if (e <= s) return;
+
+    /* Kiểm tra overlap với mark hiện có — nếu có thì bỏ qua */
+    var walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT, null, false);
+    var pos = 0, overlap = false, n;
+    while ((n = walker.nextNode())) {
+      var len = n.textContent.length;
+      var ns = pos, ne = pos + len;
+      if (ne > s && ns < e) {
+        if (n.parentElement && n.parentElement.closest('mark.hl')) {
+          overlap = true;
+          break;
+        }
+      }
+      pos = ne;
+    }
+    if (overlap) return;
+
+    /* Bọc mark */
+    wrapRange(section, s, e, hlState.color);
+
+    /* Lưu vào state */
+    var actualText = plainText.slice(s, e);
+    var before = plainText.slice(0, s);
+    var occurrence = 0;
+    var idx2 = -1;
+    while ((idx2 = before.indexOf(actualText, idx2 + 1)) !== -1) occurrence++;
+
+    hlState.highlights.push({
+      section: section.id.replace('sec-', ''),
+      text: actualText,
+      occurrence: occurrence,
+      color: hlState.color
+    });
+    saveHighlights();
+
+    /* Xoá selection */
+    sel.removeAllRanges();
+  }, 50);
+}
+
+/* Xoá một mark (khi ở chế độ erase) */
+function handleEraseClick(e){
+  if (!hlState.active || !hlState.erase) return;
+  var mark = e.target.closest('mark.hl');
+  if (!mark) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  var parent = mark.parentNode;
+  while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+  parent.removeChild(mark);
+  parent.normalize();
+
+  rescanHighlights();
+}
+
+/* Xoá toàn bộ highlight */
+function clearAllHighlights(){
+  var count = document.querySelectorAll('mark.hl').length;
+  if (count === 0) {
+    alert('Chưa có đánh dấu nào để xoá.');
+    return;
+  }
+  if (!window.confirm('Xoá tất cả ' + count + ' đánh dấu?')) return;
+
+  var marks = document.querySelectorAll('mark.hl');
+  for (var i = 0; i < marks.length; i++) {
+    var m = marks[i];
+    var parent = m.parentNode;
+    while (m.firstChild) parent.insertBefore(m.firstChild, m);
+    parent.removeChild(m);
+    parent.normalize();
+  }
+
+  hlState.highlights = [];
+  saveHighlights();
+}
+
+/* Khởi tạo chế độ highlight */
+function initHighlightMode(){
+  loadHighlights();
+
+  /* Khôi phục marks đã lưu (nếu có) */
+  restoreHighlights();
+
+  /* Nút FAB bật/tắt */
+  document.getElementById('hlFAB').addEventListener('click', toggleHighlightMode);
+
+  /* Nút chọn màu */
+  var colorBtns = document.querySelectorAll('.hl-color');
+  for (var i = 0; i < colorBtns.length; i++) {
+    (function(btn){
+      btn.addEventListener('click', function(){
+        for (var j = 0; j < colorBtns.length; j++) colorBtns[j].classList.remove('active');
+        btn.classList.add('active');
+        hlState.color = btn.dataset.color;
+        hlState.erase = false;
+        document.body.classList.remove('hl-erase-mode');
+        document.getElementById('hlErase').classList.remove('active');
+      });
+    })(colorBtns[i]);
+  }
+
+  /* Nút chế độ xoá */
+  document.getElementById('hlErase').addEventListener('click', function(){
+    hlState.erase = !hlState.erase;
+    document.body.classList.toggle('hl-erase-mode', hlState.erase);
+    this.classList.toggle('active', hlState.erase);
+  });
+
+  /* Nút xoá tất cả */
+  document.getElementById('hlClear').addEventListener('click', clearAllHighlights);
+
+  /* Nút đóng */
+  document.getElementById('hlClose').addEventListener('click', function(){
+    if (hlState.active) toggleHighlightMode();
+  });
+
+  /* Lắng nghe chọn text */
+  document.addEventListener('mouseup', handleSelection);
+  document.addEventListener('touchend', handleSelection);
+
+  /* Lắng nghe click xoá mark */
+  document.addEventListener('click', handleEraseClick, true);
 }
 
 })();
